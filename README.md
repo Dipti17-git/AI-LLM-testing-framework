@@ -33,3 +33,19 @@ Topics covered:
 - Missing-information handling
 - Claim-level response validation
 - Converting AI instructions into testable requirements
+- ### Day 2: LLM Configuration and Context Testing
+
+Topics applied:
+
+- Token and context-window fundamentals
+- System vs user instruction testing
+- Retrieval vs generation failure analysis
+- Prompt injection testing
+- Privacy instruction validation
+- Repeated-output consistency concepts
+- Boundary value analysis for LLM policy responses
+- Ambiguous temporal input testing
+
+Key testing principle:
+
+A wrong AI response does not automatically indicate an LLM-generation defect. The source, retrieval, supplied context and generation layers should be investigated independently.
