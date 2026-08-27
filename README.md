@@ -45,6 +45,7 @@ Topics applied:
 - Repeated-output consistency concepts
 - Boundary value analysis for LLM policy responses
 - Ambiguous temporal input testing
+- Golden dataset-based regression testing
 
 Key testing principle:
 
