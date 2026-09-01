@@ -50,3 +50,21 @@ Topics applied:
 Key testing principle:
 
 A wrong AI response does not automatically indicate an LLM-generation defect. The source, retrieval, supplied context and generation layers should be investigated independently.
+### API Testing for AI Applications
+
+The framework includes automated API testing for an HR Assistant service
+using Python, requests and pytest.
+
+Current coverage includes:
+
+- HTTP status validation
+- JSON response validation
+- mandatory-field validation
+- empty and whitespace input testing
+- parameterized negative testing
+- reusable pytest fixtures
+- request timeout handling
+- AI response presence validation
+- missing-information scenarios
+- prompt-injection scenarios
+- API vs AI failure classification
