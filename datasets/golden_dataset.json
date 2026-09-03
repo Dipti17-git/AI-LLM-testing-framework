@@ -4,6 +4,7 @@
     "category": "positive_groundedness",
     "context": "Employees receive 25 vacation days annually.",
     "prompt": "How many vacation days do employees receive each year?",
+    "mock_response": "Employees receive 25 vacation days annually.",
     "critical_facts": [
       "25 vacation days",
       "annual entitlement"
