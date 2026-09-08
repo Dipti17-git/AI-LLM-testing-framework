@@ -68,3 +68,19 @@ Current coverage includes:
 - missing-information scenarios
 - prompt-injection scenarios
 - API vs AI failure classification
+## API & LLM Integration Testing
+
+The framework currently includes automated testing for an AI-assisted HR API using Python and pytest.
+
+Implemented coverage includes:
+
+- HTTP status validation
+- JSON response validation
+- Required-field validation
+- Positive API scenarios
+- Missing-field validation
+- Empty and whitespace input validation
+- Parameterized negative testing
+- LLM client success/failure handling
+- Provider exception handling
+- Separation of API failures, AI-quality failures and evaluator failures
