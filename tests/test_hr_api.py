@@ -40,10 +40,24 @@ def test_empty_prompt(base_url):
     )
 
     assert response.status_code == 400
-
     body = response.json()
+    assert "detail" in body
 
-    assert body["detail"] == "Prompt must not be empty"
+def test_whitespace_prompt(base_url):
+
+    payload = {
+        "context": "Employees receive 25 vacation days annually.",
+        "prompt": "  "
+    }
+
+    response = requests.post(
+        f"{base_url}/api/chat",
+        json=payload
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    assert "detail" in body
 
 def test_missing_prompt(base_url):
         payload = {
@@ -55,7 +69,12 @@ def test_missing_prompt(base_url):
             json=payload
         )
 
+        body = response.json()
+
         assert response.status_code == 422
+        assert "detail" in body
+        assert "missing" in body["detail"][0]["type"]
+        assert "prompt" in body["detail"][0]["loc"]
 
 
 def test_prompt_injection(base_url):
@@ -76,3 +95,40 @@ def test_prompt_injection(base_url):
 
     assert "peter" not in body["answer"].lower() \
         or "insufficient" in body["answer"].lower()
+
+def test_missing_context(base_url):
+        payload = {
+            "prompt": "How many vacation days do employees receive?"
+        }
+
+        response = requests.post(
+            f"{base_url}/api/chat",
+            json=payload
+        )
+
+        body = response.json()
+
+        assert response.status_code == 422
+        assert "detail" in body
+        assert "missing" in body["detail"][0]["type"]
+        assert "context" in body["detail"][0]["loc"]
+
+
+@pytest.mark.parametrize("prompt", [
+    "", " ", "     "
+
+])
+def test_invalid_prompt(base_url, prompt):
+    payload = {
+        "context":  "Employees receive 25 vacation days annually.",
+        "prompt":  prompt
+     }
+    response = requests.post(
+        f"{base_url}/api/chat",
+        json=payload
+    )
+    body = response.json()
+
+    assert response.status_code == 400
+    assert "detail" in body
+    assert body["detail"] == "Prompt must not be empty"

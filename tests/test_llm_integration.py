@@ -67,3 +67,106 @@ def test_vacation_response_repeatedly():
         print(f"\nPass rate: {pass_rate:.0%}")
 
         assert pass_rate == 1.0
+
+        from llm.client import LLMClient
+
+def test_vacation_not_entitled():
+
+# create client
+     client = LLMClient()
+# create context
+     context = "Employees do not receive 25 vacation days annually."
+# create prompt
+     prompt = "How many vacation days can I take in a year?"
+# call generate() and store response
+     answer = get_llm_response(client, context, prompt)
+
+# assert response is not empty
+     result = validate_vacation_entitlement(answer)
+     assert not result
+
+def test_vacation_entitlement():
+
+# create client
+    client = LLMClient()
+# create context
+    context = "Employees receive 25 vacation days annually."
+# create prompt
+    prompt = "How many vacation days can I take in a year?"
+# call generate() and store response
+    answer = get_llm_response(client, context, prompt)
+
+# assert response is not empty
+    result = validate_vacation_entitlement(answer)
+    assert  result
+
+def validate_vacation_entitlement(answer):
+    if answer is None:
+        print("NO RESPONSE RECEIVED")
+        return False
+    answer_lower = answer.lower()
+    print(f"VALIDATOR RECEIVED: {answer_lower}")
+    if answer_lower.strip() == "":
+          print("CHECK USED: EMPTY RESPONSE")
+          return False
+    if "do not receive" in answer_lower or "not entitled" in answer_lower:
+          print("CHECK USED: NEGATIVE PHRASE")
+          return False
+
+    if "25" in answer_lower or "twenty-five" in answer_lower:
+          print("CHECK USED: VACATION NUMBER")
+          return True
+    print("CHECK USED: NO MATCH")
+    return False
+
+class FailingLLMClient:
+
+    def generate(self, context, prompt):
+        raise Exception("Simulated provider failure")
+
+
+def get_llm_response(client, context, prompt):
+    try:
+       answer = client.generate(context, prompt)
+       return answer
+    except Exception as e:
+        print(f"ANSWER: {e}")
+        return None
+
+def test_llm_response_failure():
+    client = FailingLLMClient()
+    context = "Employees receive 25 vacation days annually."
+    prompt = "How many vacation days can I take in a year?"
+    answer = get_llm_response(client, context, prompt)
+    assert answer is None
+
+
+def test_llm_response_success():
+        client = LLMClient()
+        context = "Employees receive 25 vacation days annually."
+        prompt = "How many vacation days can I take in a year?"
+        answer = get_llm_response(client, context, prompt)
+        assert answer is not None
+
+def safe_llm_call(client, context, prompt):
+    try:
+        answer = client.generate(context, prompt)
+        return answer
+    except Exception as e:
+        print(f"LLM call failed: {e}")
+        return None
+
+def test_safe_llm_call_with_failure():
+    client = FailingLLMClient()
+    context = "Employees receive 25 vacation days annually."
+    prompt = "How many vacation days can I take in a year?"
+    answer = safe_llm_call(client, context, prompt)
+    assert answer is None
+
+def test_safe_llm_call_with_success():
+    client = LLMClient()
+    context = "Employees receive 25 vacation days annually."
+    prompt = "How many vacation days can I take in a year?"
+    answer = safe_llm_call(client, context, prompt)
+    assert answer is not None
+
