@@ -179,3 +179,47 @@ A response can have:
 
 Therefore AI applications require both traditional API validation and
 AI-specific semantic evaluation.
+# API Test Strategy – AI HR Assistant
+
+## Objective
+Validate the API behaviour of an AI-assisted HR application, including successful requests, invalid inputs, response structure and integration failures.
+
+## Endpoint
+POST /api/chat
+
+## Positive Testing
+- Send valid context and prompt
+- Validate HTTP 200
+- Validate JSON response
+- Validate required `answer` field
+- Validate required `model` field
+- Validate answer is not empty
+
+## Negative Testing
+- Missing prompt
+- Missing context
+- Empty prompt
+- Whitespace-only prompt
+- Invalid request structure
+
+## Response Validation
+Tests validate:
+1. HTTP status
+2. JSON response body
+3. Required fields
+4. Non-empty response
+5. Error response structure
+
+## Failure Classification
+Failures are distinguished between:
+- API/environment failures
+- Request validation failures
+- Response contract failures
+- LLM/provider failures
+- AI response-quality failures
+- Test/evaluator failures
+
+## Automation
+API tests are implemented using Python, pytest and requests.
+
+Parameterized tests are used where multiple invalid inputs should produce the same expected behaviour.
