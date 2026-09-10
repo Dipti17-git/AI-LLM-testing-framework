@@ -1,86 +1,60 @@
-# AI-LLM-testing-framework
-Hands-on AI/LLM testing portfolio covering functional testing, LLM evaluation, RAG testing, AI security and automated regression.
 # AI/LLM Testing Framework
 
-A hands-on portfolio project demonstrating my approach to testing AI and LLM-based applications.
+A hands-on portfolio project demonstrating how traditional QA practices can be extended to test AI/LLM-powered applications.
 
-## Project Objective
+The project uses a simulated HR policy assistant to demonstrate API automation, LLM response evaluation, negative testing, provider failure handling, performance validation and AI-specific behaviour testing.
 
-The objective of this project is to apply software quality engineering principles to AI/LLM applications and explore how testing changes when outputs are non-deterministic.
+## Current Capabilities
 
-The project will progressively cover:
+- REST API automation with Python, pytest and requests
+- Positive and negative API testing
+- Response contract and datatype validation
+- Pytest fixtures and parameterization
+- LLM response validation
+- Missing-information and unsupported-answer testing
+- Prompt-injection and privacy-sensitive testing
+- LLM provider failure simulation
+- Response-time and timeout validation
+- Repeated-response consistency testing
 
-- LLM functional testing
-- Prompt and instruction validation
-- API automation using Python and pytest
-- Groundedness and hallucination testing
-- Golden dataset-based evaluation
+## Tech Stack
+
+Python | pytest | requests | FastAPI | Git | GitHub
+
+## Project Structure
+
+```text
+app/          - HR assistant API
+datasets/     - Test datasets
+docs/         - Test strategy and evaluation documentation
+evaluation/   - AI response evaluators
+llm/          - LLM client
+reports/      - Test reports
+tests/        - Automated test suite
+```
+
+## Run the Project
+
+Start the API:
+
+```bash
+uvicorn app.hr_api:app --reload
+```
+
+Run the tests:
+
+```bash
+python -m pytest -v
+```
+
+## Current Status
+
+43 automated tests covering API validation, LLM integration, provider failures, performance checks and AI-specific behaviour.
+
+## Next Steps
+
+- Advanced LLM evaluation
 - RAG testing and evaluation
-- AI security and adversarial testing
-- Automated AI regression testing
-
-## Current Progress
-
-### Day 1: LLM Testing Fundamentals
-
-Topics covered:
-
-- Traditional QA vs AI/LLM testing
-- LLM, GenAI, prompt, model and inference
-- Deterministic vs non-deterministic outputs
-- Groundedness
-- Unsupported assumptions
-- Missing-information handling
-- Claim-level response validation
-- Converting AI instructions into testable requirements
-- ### Day 2: LLM Configuration and Context Testing
-
-Topics applied:
-
-- Token and context-window fundamentals
-- System vs user instruction testing
-- Retrieval vs generation failure analysis
-- Prompt injection testing
-- Privacy instruction validation
-- Repeated-output consistency concepts
-- Boundary value analysis for LLM policy responses
-- Ambiguous temporal input testing
-- Golden dataset-based regression testing
-
-Key testing principle:
-
-A wrong AI response does not automatically indicate an LLM-generation defect. The source, retrieval, supplied context and generation layers should be investigated independently.
-### API Testing for AI Applications
-
-The framework includes automated API testing for an HR Assistant service
-using Python, requests and pytest.
-
-Current coverage includes:
-
-- HTTP status validation
-- JSON response validation
-- mandatory-field validation
-- empty and whitespace input testing
-- parameterized negative testing
-- reusable pytest fixtures
-- request timeout handling
-- AI response presence validation
-- missing-information scenarios
-- prompt-injection scenarios
-- API vs AI failure classification
-## API & LLM Integration Testing
-
-The framework currently includes automated testing for an AI-assisted HR API using Python and pytest.
-
-Implemented coverage includes:
-
-- HTTP status validation
-- JSON response validation
-- Required-field validation
-- Positive API scenarios
-- Missing-field validation
-- Empty and whitespace input validation
-- Parameterized negative testing
-- LLM client success/failure handling
-- Provider exception handling
-- Separation of API failures, AI-quality failures and evaluator failures
+- AI security testing
+- Automated reporting
+- CI/CD integration

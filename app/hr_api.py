@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import time
 
 
 app = FastAPI()
@@ -40,7 +41,10 @@ def chat(request: HRRequest):
     else:
         answer = "The supplied information is insufficient to answer the question."
 
+
     return {
+
         "answer": answer,
         "model": "mock-hr-assistant"
+
     }

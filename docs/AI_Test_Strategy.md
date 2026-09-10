@@ -1,225 +1,110 @@
-# AI/LLM Test Strategy
-
-## Objective
-
-The objective of this testing approach is to evaluate whether an LLM-based application produces responses that are accurate, relevant, grounded in the provided context, and compliant with system instructions.
-
-## Testing Approach
-
-Unlike traditional deterministic applications, LLM applications may produce different valid responses for the same input.
-
-Therefore, testing should evaluate both deterministic properties and semantic quality.
-
-## Key Validation Areas
-
-### Functional Validation
-
-Validate whether the model follows the application's defined requirements and instructions.
-
-### Groundedness
-
-Validate whether factual claims made by the model are supported by the provided context or source information.
-
-### Missing Information
-
-Validate whether the model appropriately identifies when sufficient information is unavailable rather than generating unsupported answers.
-
-### Unsupported Inference
-
-Validate whether the model makes conclusions that are not explicitly supported by the available information.
-
-### Privacy
-
-Validate whether the model protects restricted or personal information according to its instructions.
-
-### Boundary and Negative Testing
-
-Validate model behaviour when receiving ambiguous, incomplete, conflicting or unsupported questions.
-
-## Test Design Principle
-
-Each AI response should be evaluated at claim level rather than treating the complete response as correct simply because most of the answer is accurate.
-
-Important factual claims should be traceable to the supplied source or context when the model is instructed to answer only from that information.
-# AI Assistant API Test Strategy
+# AI/LLM API Test Strategy – HR Assistant
 
 ## Objective
 
 Validate the API and AI behaviour of an HR policy assistant that accepts
-policy context and a user prompt and returns an AI-generated answer.
+policy context and a user prompt and returns an AI-generated response.
 
-The testing approach separates traditional API validation from AI-specific
+The testing approach combines traditional API validation with AI-specific
 response evaluation.
 
----
+## Scope
 
-## System Under Test
+Testing covers:
 
-Endpoint:
+- API functionality
+- Input validation
+- Response contract validation
+- LLM/provider failure handling
+- Response time and timeout behaviour
+- Missing-information handling
+- Prompt injection and privacy-sensitive scenarios
+- AI response evaluation
 
-POST /api/chat
+## API Validation
 
-Example request:
-
-{
-  "context": "Employees receive 25 vacation days annually.",
-  "prompt": "How many vacation days do employees receive?"
-}
-
-Example response:
-
-{
-  "answer": "Employees receive 25 vacation days annually.",
-  "model": "mock-hr-assistant"
-}
-
----
-
-## Test Layers
-
-### 1. HTTP Validation
-
-Validate:
+For POST `/api/chat`, automated tests validate:
 
 - HTTP status codes
-- Request processing
-- Error handling
-- Response availability
-- Request timeout
+- JSON responses
+- Required `answer` and `model` fields
+- Expected datatypes
+- Non-empty responses
+- Missing context or prompt
+- Empty and whitespace-only inputs
+- Error response structure
 
-### 2. Schema Validation
+## AI Behaviour Validation
 
-Validate:
+AI responses are evaluated for:
 
-- answer field exists
-- model field exists
-- expected datatypes
-- mandatory fields
-- malformed or incomplete requests
+- Correctness
+- Groundedness against supplied context
+- Missing information
+- Unsupported inference
+- Response consistency
+- Prompt-injection behaviour
+- Sensitive-information disclosure
 
-### 3. Input Validation
+AI responses are evaluated against expected behaviour rather than relying
+only on exact-string matching.
 
-Test:
+## Provider and Failure Testing
 
-- valid context and prompt
-- missing prompt
-- empty prompt
-- whitespace-only prompt
-- missing context
-- empty context
+Provider failures are simulated using a failing LLM client.
 
-### 4. AI Content Validation
+Tests verify that:
 
-Validate that:
+- Provider exceptions are handled
+- Failures do not unexpectedly crash the application
+- Error information is logged
+- Provider failures are distinguished from AI-quality failures
 
-- response is non-empty
-- answer reflects supplied context
-- unsupported information is not invented
-- missing information is handled appropriately
+## Performance Validation
 
-### 5. AI Security and Behaviour
+API response time is measured against a configurable threshold.
 
-Validate scenarios including:
+The tests distinguish between:
 
-- prompt injection
-- instruction override
-- privacy-sensitive requests
-- unsupported assumptions
+- Response-time requirement
+- Technical request timeout
 
----
+An HTTP 200 response can therefore still fail the performance requirement.
 
 ## Automation Approach
 
-Python, requests and pytest are used for API automation.
+The framework uses:
 
-Pytest parameterization is used to execute the same validation logic
-against multiple input datasets.
+- Python
+- pytest
+- requests
+- FastAPI
+- pytest fixtures
+- pytest parameterization
 
-Fixtures are used for reusable test configuration such as the API base URL.
-
-Example:
-
-@pytest.fixture
-def base_url():
-    return "http://127.0.0.1:8000"
-
----
+Reusable fixtures are used for common test setup and test data.
 
 ## Failure Classification
 
-An automated test failure should not automatically be classified as an
-LLM defect.
-
-Failures are investigated across the following layers:
+Failures are investigated across:
 
 1. Test code/setup
 2. Test data
-3. HTTP/API layer
-4. Response schema
-5. Application/integration layer
-6. AI/model behaviour
-7. Evaluation logic
+3. API/environment
+4. Request validation
+5. Response contract
+6. LLM/provider
+7. AI response behaviour
+8. Evaluation logic
+9. Performance
 
-For example, HTTP 200 with an empty answer indicates that transport
-succeeded but content validation failed. Further investigation is required
-before attributing the issue to the LLM.
+A successful API response does not automatically mean that the AI response
+is correct.
 
----
+## Current Status
 
-## Key Quality Principle
+The automated regression suite currently contains 43 passing tests covering
+API, integration, performance and AI-specific behaviour.
 
-API success does not imply AI success.
-
-A response can have:
-
-- HTTP PASS
-- Schema PASS
-- Content presence PASS
-- AI semantic FAIL
-
-Therefore AI applications require both traditional API validation and
-AI-specific semantic evaluation.
-# API Test Strategy – AI HR Assistant
-
-## Objective
-Validate the API behaviour of an AI-assisted HR application, including successful requests, invalid inputs, response structure and integration failures.
-
-## Endpoint
-POST /api/chat
-
-## Positive Testing
-- Send valid context and prompt
-- Validate HTTP 200
-- Validate JSON response
-- Validate required `answer` field
-- Validate required `model` field
-- Validate answer is not empty
-
-## Negative Testing
-- Missing prompt
-- Missing context
-- Empty prompt
-- Whitespace-only prompt
-- Invalid request structure
-
-## Response Validation
-Tests validate:
-1. HTTP status
-2. JSON response body
-3. Required fields
-4. Non-empty response
-5. Error response structure
-
-## Failure Classification
-Failures are distinguished between:
-- API/environment failures
-- Request validation failures
-- Response contract failures
-- LLM/provider failures
-- AI response-quality failures
-- Test/evaluator failures
-
-## Automation
-API tests are implemented using Python, pytest and requests.
-
-Parameterized tests are used where multiple invalid inputs should produce the same expected behaviour.
+Future iterations will extend the framework with more advanced LLM
+evaluation, RAG testing and AI security testing.
