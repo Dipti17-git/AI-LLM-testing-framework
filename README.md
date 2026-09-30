@@ -58,3 +58,22 @@ python -m pytest -v
 - AI security testing
 - Automated reporting
 - CI/CD integration
+## LLM Regression & Evaluation
+
+The framework includes a 35-case Golden Dataset covering scenarios such as:
+
+- Missing information and ambiguity
+- Prompt injection
+- Privacy and authorization
+- Contradictory claims
+- Boundary conditions
+- Numerical and multi-condition reasoning
+
+The regression pipeline executes dataset-driven tests, evaluates responses, and generates a summary containing:
+
+- Total test cases
+- Passed and failed cases
+- Pass rate
+- Failure categories
+
+The current reporting example uses simulated failures to validate the reporting pipeline; these should not be interpreted as actual model-quality results.
