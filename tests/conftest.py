@@ -1,5 +1,6 @@
 import pytest
 from llm.client import LLMClient
+from evaluation.correctness_evaluator import FakeCorrectnessJudge
 
 @pytest.fixture
 def base_url():
@@ -16,6 +17,9 @@ def valid_payload():
 def llm_client():
     return LLMClient()
 
+@pytest.fixture
+def judge_client():
+    return FakeCorrectnessJudge()
 
 @pytest.fixture
 def vacation_scenario():
